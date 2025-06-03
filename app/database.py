@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 
 # SQLite database URL (from .env or default)
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./rssify.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./rssify2.db")
 
 engine = create_engine(
     DATABASE_URL, connect_args={"check_same_thread": False}
