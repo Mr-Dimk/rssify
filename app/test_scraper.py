@@ -8,10 +8,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.scraper import WebScraper
 
 if __name__ == "__main__":
-    url = "https://www.anthropic.com/engineering"
-    post_selector = "article"  # пример: заменить на актуальный селектор для постов
+    url = "https://www.anthropic.com/claude-explains"
+    post_selector = "div.blogs_card_wrap, div.card"  # пример: заменить на актуальный селектор для постов
     title_selector = "h2, h3"
-    desc_selector = "p"
+    desc_selector = "p, div.u-paragraph-s"
     link_selector = "a"
 
     scraper = WebScraper()
