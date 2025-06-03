@@ -40,19 +40,19 @@
 
 ### 2.2 Модели данных
 
-- [ ] 2.2.1. Создать app/models.py
-- [ ] 2.2.2. Создать модель Site (id, name, url, selector, etc.)
-- [ ] 2.2.3. Создать модель Post (id, site_id, title, description, etc.)
-- [ ] 2.2.4. Настроить связи между моделями (Site -> Posts)
-- [ ] 2.2.5. Добавить индексы для оптимизации запросов
+- [x] 2.2.1. Создать app/models.py
+- [x] 2.2.2. Создать модель Site (id, name, url, selector, etc.)
+- [x] 2.2.3. Создать модель Post (id, site_id, title, description, etc.)
+- [x] 2.2.4. Настроить связи между моделями (Site -> Posts)
+- [x] 2.2.5. Добавить индексы для оптимизации запросов
 
 ### 2.3 Pydantic схемы
 
-- [ ] 2.3.1. Создать app/schemas.py
-- [ ] 2.3.2. Создать SiteBase, SiteCreate, SiteUpdate схемы
-- [ ] 2.3.3. Создать PostBase, Post схемы
-- [ ] 2.3.4. Создать SiteWithPosts схему для вложенных данных
-- [ ] 2.3.5. Добавить валидацию полей (URL, длина строк)
+- [x] 2.3.1. Создать app/schemas.py
+- [x] 2.3.2. Создать SiteBase, SiteCreate, SiteUpdate схемы
+- [x] 2.3.3. Создать PostBase, Post схемы
+- [x] 2.3.4. Создать SiteWithPosts схему для вложенных данных
+- [x] 2.3.5. Добавить валидацию полей (URL, длина строк)
 
 ### 2.4 Инициализация БД
 
