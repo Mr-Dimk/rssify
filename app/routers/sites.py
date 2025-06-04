@@ -5,6 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app import models, schemas, database
 from typing import List
+from fastapi import BackgroundTasks
+from app.scraper import WebScraper
 
 router = APIRouter(
     prefix="/api/sites",
@@ -95,3 +97,44 @@ def delete_site(site_id: int, db: Session = Depends(database.get_db)):
     db.delete(site)
     db.commit()
     return None
+
+@router.post("/{site_id}/check", status_code=200)
+def check_site(site_id: int, background_tasks: BackgroundTasks, db: Session = Depends(database.get_db)):
+    """
+    Принудительно запустить проверку сайта (асинхронно).
+    """
+    site = db.query(models.Site).filter(models.Site.id == site_id, models.Site.is_active == 1).first()
+    if not site:
+        raise HTTPException(status_code=404, detail="Site not found or inactive")
+    def do_check():
+        scraper = WebScraper()
+        try:
+            soup = scraper.fetch_page(site.url)
+            # Здесь можно добавить логику обновления постов и last_check
+        except Exception as e:
+            # Здесь можно добавить обработку ошибок и обновление last_error
+            pass
+    background_tasks.add_task(do_check)
+    return {"detail": "Check started"}
+
+@router.get("/api/stats", tags=["admin"])
+def get_stats(db: Session = Depends(database.get_db)):
+    """
+    Получить статистику сервиса (количество сайтов, постов).
+    """
+    sites_count = db.query(models.Site).count()
+    posts_count = db.query(models.Post).count()
+    return {"sites": sites_count, "posts": posts_count}
+
+@router.get("/api/logs", tags=["admin"])
+def get_logs():
+    """
+    Получить последние строки из лог-файла (если есть).
+    """
+    import os
+    log_path = os.path.join(os.getcwd(), "logs", "app.log")
+    if not os.path.exists(log_path):
+        return {"logs": "Log file not found"}
+    with open(log_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()[-50:]
+    return {"logs": "".join(lines)}
