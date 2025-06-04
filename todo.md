@@ -150,11 +150,11 @@
 
 ### 6.1 Базовый планировщик
 
-- [ ] 6.1.1. Создать app/scheduler.py
-- [ ] 6.1.2. Настроить APScheduler с BackgroundScheduler
-- [ ] 6.1.3. Создать класс TaskScheduler
-- [ ] 6.1.4. Реализовать метод start_scheduler()
-- [ ] 6.1.5. Добавить graceful shutdown для планировщика
+- [x] 6.1.1. Создать app/scheduler.py
+- [x] 6.1.2. Настроить APScheduler с BackgroundScheduler
+- [x] 6.1.3. Создать класс TaskScheduler
+- [x] 6.1.4. Реализовать метод start_scheduler()
+- [x] 6.1.5. Добавить graceful shutdown для планировщика
 
 ### 6.2 Задачи мониторинга
 
@@ -211,6 +211,7 @@
 - [x] 8.1.3. Создать tests/test_scraper.py
 - [x] 8.1.4. Создать tests/test_rss_generator.py
 - [x] 8.1.5. Создать tests/test_utils.py
+- [x] Добавить юнит-тесты для scheduler.py
 
 ### 8.2 Integration тесты
 
