@@ -19,6 +19,8 @@ class Site(Base):
     description = Column(Text, nullable=True)
     is_active = Column(Integer, default=1)
     check_interval = Column(Integer, default=10, nullable=False)  # Интервал проверки в минутах
+    last_check = Column(DateTime, nullable=True)
+    last_error = Column(Text, nullable=True)
     # Можно добавить другие поля: created_at, updated_at, etc.
 
     posts = relationship("Post", back_populates="site", cascade="all, delete-orphan")

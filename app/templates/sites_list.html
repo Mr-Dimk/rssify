@@ -1,0 +1,235 @@
+{% extends "base.html" %} {% block title %}Сайты — RSSify{% endblock %} {% block
+content %}
+<h2>Сайты</h2>
+
+<h3>Добавить новый сайт</h3>
+<form method="post" action="/add-site">
+  <label
+    >Название:<br /><input
+      type="text"
+      name="name"
+      maxlength="128"
+      required /></label
+  ><br />
+  <label
+    >URL:<br /><input type="url" name="url" maxlength="512" required /></label
+  ><br />
+  <label
+    >CSS-селектор постов:<br /><input
+      type="text"
+      name="selector"
+      maxlength="256"
+      required /></label
+  ><br />
+  <label
+    >CSS-селектор заголовка:<br /><input
+      type="text"
+      name="title_selector"
+      maxlength="256" /></label
+  ><br />
+  <label
+    >CSS-селектор описания:<br /><input
+      type="text"
+      name="desc_selector"
+      maxlength="256" /></label
+  ><br />
+  <label
+    >CSS-селектор ссылки:<br /><input
+      type="text"
+      name="link_selector"
+      maxlength="256" /></label
+  ><br />
+  <label
+    >Описание:<br /><input
+      type="text"
+      name="description"
+      maxlength="512" /></label
+  ><br />
+  <label>Активен: <input type="checkbox" name="is_active" checked /></label
+  ><br />
+  <label
+    >Интервал проверки (мин):<br /><input
+      type="number"
+      name="check_interval"
+      min="1"
+      max="1440"
+      value="10" /></label
+  ><br />
+  <button type="submit">Добавить сайт</button>
+</form>
+
+<hr />
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Название</th>
+      <th>URL</th>
+      <th>Описание</th>
+      <th>Активен</th>
+      <th>Постов</th>
+      <th>Последняя проверка</th>
+      <th>Ошибка</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for site in sites %}
+    <tr id="site-row-{{ site.id }}" data-site="{{ site | tojson | safe }}">
+      <td>{{ site.id }}</td>
+      <td>{{ site.name }}</td>
+      <td><a href="{{ site.url }}" target="_blank">{{ site.url }}</a></td>
+      <td>{{ site.description or '' }}</td>
+      <td>{% if site.is_active %}Да{% else %}Нет{% endif %}</td>
+      <td>{{ site.posts|length }}</td>
+      <td>
+        {% if site.last_check %}{{ site.last_check.strftime('%Y-%m-%d %H:%M')
+        }}{% else %}-{% endif %}
+      </td>
+      <td>
+        {% if site.last_error %}<span
+          style="color: red"
+          title="{{ site.last_error }}"
+          >Ошибка</span
+        >{% else %}-{% endif %}
+      </td>
+      <td>
+        <button class="edit-site-btn" data-site-id="{{ site.id }}">
+          Редактировать
+        </button>
+        <button class="delete-site-btn" data-site-id="{{ site.id }}">
+          Удалить
+        </button>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="9">Нет сайтов</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Модальное окно для редактирования сайта -->
+<div
+  id="editSiteModal"
+  class="modal"
+  style="
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    align-items: center;
+    justify-content: center;
+  "
+>
+  <div
+    style="
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 8px;
+      max-width: 420px;
+      width: 100%;
+      position: relative;
+    "
+  >
+    <button
+      id="closeEditModal"
+      style="
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        font-size: 1.2em;
+        background: none;
+        border: none;
+        cursor: pointer;
+      "
+    >
+      &times;
+    </button>
+    <h3>Редактировать сайт</h3>
+    <form id="editSiteForm">
+      <input type="hidden" name="id" id="edit-site-id" />
+      <label
+        >Название:<br /><input
+          type="text"
+          name="name"
+          id="edit-site-name"
+          maxlength="128"
+          required /></label
+      ><br />
+      <label
+        >URL:<br /><input
+          type="url"
+          name="url"
+          id="edit-site-url"
+          maxlength="512"
+          required /></label
+      ><br />
+      <label
+        >CSS-селектор постов:<br /><input
+          type="text"
+          name="selector"
+          id="edit-site-selector"
+          maxlength="256"
+          required /></label
+      ><br />
+      <label
+        >CSS-селектор заголовка:<br /><input
+          type="text"
+          name="title_selector"
+          id="edit-site-title_selector"
+          maxlength="256" /></label
+      ><br />
+      <label
+        >CSS-селектор описания:<br /><input
+          type="text"
+          name="desc_selector"
+          id="edit-site-desc_selector"
+          maxlength="256" /></label
+      ><br />
+      <label
+        >CSS-селектор ссылки:<br /><input
+          type="text"
+          name="link_selector"
+          id="edit-site-link_selector"
+          maxlength="256" /></label
+      ><br />
+      <label
+        >Описание:<br /><input
+          type="text"
+          name="description"
+          id="edit-site-description"
+          maxlength="512" /></label
+      ><br />
+      <label
+        >Активен:
+        <input
+          type="checkbox"
+          name="is_active"
+          id="edit-site-is_active" /></label
+      ><br />
+      <label
+        >Интервал проверки (мин):<br /><input
+          type="number"
+          name="check_interval"
+          id="edit-site-check_interval"
+          min="1"
+          max="1440" /></label
+      ><br />
+      <button type="submit">Сохранить</button>
+    </form>
+    <div
+      id="editSiteError"
+      style="color: red; margin-top: 0.5em; display: none"
+    ></div>
+  </div>
+</div>
+
+<script src="/static/delete-site.js"></script>
+<script src="/static/edit-site.js"></script>
+{% endblock %}

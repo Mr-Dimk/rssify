@@ -23,6 +23,8 @@ class SiteBase(BaseModel):
     description: Optional[str] = None
     is_active: Optional[bool] = True
     check_interval: Optional[int] = 10  # Интервал проверки в минутах
+    last_check: Optional[datetime] = None
+    last_error: Optional[str] = None
 
     @field_validator("name")
     @classmethod

@@ -8,3 +8,5 @@ beautifulsoup4
 feedgen
 apscheduler
 pytest
+Jinja2
+python-multipart

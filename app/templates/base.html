@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}RSSify{% endblock %}</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1><a href="/">RSSify</a></h1>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+    <footer>
+      <p style="font-size: small; color: #888">&copy; 2025 RSSify</p>
+    </footer>
+  </body>
+</html>
