@@ -45,13 +45,17 @@ def create_site(site: schemas.SiteCreate, db: Session = Depends(database.get_db)
     Создать новый сайт для мониторинга.
     """
     # Проверка на уникальность URL
-    existing = db.query(models.Site).filter(models.Site.url == site.url).first()
+    url_str = str(site.url) if hasattr(site.url, '__str__') else site.url
+    existing = db.query(models.Site).filter(models.Site.url == url_str).first()
     if existing:
         raise HTTPException(status_code=400, detail="Site with this URL already exists")
     db_site = models.Site(
         name=site.name,
-        url=str(site.url),
+        url=url_str,
         selector=site.selector,
+        title_selector=site.title_selector,
+        desc_selector=site.desc_selector,
+        link_selector=site.link_selector,
         description=site.description,
         is_active=1 if site.is_active else 0
     )
@@ -78,6 +82,12 @@ def update_site(site_id: int, site_update: schemas.SiteUpdate, db: Session = Dep
         site.name = site_update.name
     if site_update.selector is not None:
         site.selector = site_update.selector
+    if site_update.title_selector is not None:
+        site.title_selector = site_update.title_selector
+    if site_update.desc_selector is not None:
+        site.desc_selector = site_update.desc_selector
+    if site_update.link_selector is not None:
+        site.link_selector = site_update.link_selector
     if site_update.description is not None:
         site.description = site_update.description
     if site_update.is_active is not None:
@@ -101,19 +111,19 @@ def delete_site(site_id: int, db: Session = Depends(database.get_db)):
 @router.post("/{site_id}/check", status_code=200)
 def check_site(site_id: int, background_tasks: BackgroundTasks, db: Session = Depends(database.get_db)):
     """
-    Принудительно запустить проверку сайта (асинхронно).
+    Принудительно запустить проверку сайта (асинхронно через background task).
     """
     site = db.query(models.Site).filter(models.Site.id == site_id, models.Site.is_active == 1).first()
     if not site:
         raise HTTPException(status_code=404, detail="Site not found or inactive")
     def do_check():
+        from app.scheduler import check_site as scheduler_check_site
+        from app.scraper import WebScraper
         scraper = WebScraper()
         try:
-            soup = scraper.fetch_page(site.url)
-            # Здесь можно добавить логику обновления постов и last_check
-        except Exception as e:
-            # Здесь можно добавить обработку ошибок и обновление last_error
-            pass
+            scheduler_check_site(site, db, scraper)
+        except Exception:
+            pass  # Ошибки логируются внутри scheduler_check_site
     background_tasks.add_task(do_check)
     return {"detail": "Check started"}
 

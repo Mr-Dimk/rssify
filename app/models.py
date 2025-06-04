@@ -13,6 +13,9 @@ class Site(Base):
     name = Column(String(128), nullable=False)
     url = Column(String(512), nullable=False, unique=True)
     selector = Column(String(256), nullable=False)
+    title_selector = Column(String(256), nullable=True)
+    desc_selector = Column(String(256), nullable=True)
+    link_selector = Column(String(256), nullable=True)
     description = Column(Text, nullable=True)
     is_active = Column(Integer, default=1)
     # Можно добавить другие поля: created_at, updated_at, etc.

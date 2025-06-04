@@ -17,6 +17,9 @@ class SiteBase(BaseModel):
     name: str = Field(..., max_length=128)
     url: HttpUrl
     selector: str = Field(..., max_length=256)
+    title_selector: Optional[str] = Field(None, max_length=256)
+    desc_selector: Optional[str] = Field(None, max_length=256)
+    link_selector: Optional[str] = Field(None, max_length=256)
     description: Optional[str] = None
     is_active: Optional[bool] = True
 
@@ -52,6 +55,9 @@ class SiteUpdate(BaseModel):
     name: Optional[str] = Field(None, max_length=128)
     url: Optional[HttpUrl] = None
     selector: Optional[str] = Field(None, max_length=256)
+    title_selector: Optional[str] = Field(None, max_length=256)
+    desc_selector: Optional[str] = Field(None, max_length=256)
+    link_selector: Optional[str] = Field(None, max_length=256)
     description: Optional[str] = None
     is_active: Optional[bool] = None
 
