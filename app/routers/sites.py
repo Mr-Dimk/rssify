@@ -57,7 +57,8 @@ def create_site(site: schemas.SiteCreate, db: Session = Depends(database.get_db)
         desc_selector=site.desc_selector,
         link_selector=site.link_selector,
         description=site.description,
-        is_active=1 if site.is_active else 0
+        is_active=1 if site.is_active else 0,
+        check_interval=site.check_interval if site.check_interval is not None else 10
     )
     db.add(db_site)
     db.commit()
@@ -92,6 +93,8 @@ def update_site(site_id: int, site_update: schemas.SiteUpdate, db: Session = Dep
         site.description = site_update.description
     if site_update.is_active is not None:
         site.is_active = 1 if site_update.is_active else 0
+    if site_update.check_interval is not None:
+        site.check_interval = site_update.check_interval
     db.commit()
     db.refresh(site)
     return site

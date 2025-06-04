@@ -180,19 +180,10 @@
 
 ### 7.1 Контейнеризация
 
-- [ ] 7.1.1. Создать Dockerfile для Python приложения
-- [ ] 7.1.2. Оптимизировать Dockerfile (multi-stage build)
-- [ ] 7.1.3. Создать docker-compose.yml
-- [ ] 7.1.4. Добавить сервис nginx в docker-compose
-- [ ] 7.1.5. Настроить volume для SQLite базы данных
-
-### 7.2 Nginx конфигурация
-
-- [ ] 7.2.1. Создать nginx.conf
-- [ ] 7.2.2. Настроить reverse proxy для FastAPI
-- [ ] 7.2.3. Добавить gzip сжатие для RSS фидов
-- [ ] 7.2.4. Настроить статические файлы
-- [ ] 7.2.5. Добавить rate limiting
+- [x] 7.1.1. Создать Dockerfile для Python приложения
+- [x] 7.1.2. Оптимизировать Dockerfile (multi-stage build)
+- [x] 7.1.3. Создать docker-compose.yml
+- [x] 7.1.4. Настроить volume для SQLite базы данных
 
 ### 7.3 Продакшн настройки
 

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: rssify_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./logs:/app/logs
+      - ./rssify.db:/app/rssify.db # Volume для SQLite БД
+    depends_on:
+      - traefik
+
+  traefik:
+    image: traefik:v2.11
+    container_name: traefik
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --entrypoints.web.address=:80
+    ports:
+      - '80:80'
+      - '8080:8080' # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

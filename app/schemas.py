@@ -22,6 +22,7 @@ class SiteBase(BaseModel):
     link_selector: Optional[str] = Field(None, max_length=256)
     description: Optional[str] = None
     is_active: Optional[bool] = True
+    check_interval: Optional[int] = 10  # Интервал проверки в минутах
 
     @field_validator("name")
     @classmethod
@@ -60,6 +61,7 @@ class SiteUpdate(BaseModel):
     link_selector: Optional[str] = Field(None, max_length=256)
     description: Optional[str] = None
     is_active: Optional[bool] = None
+    check_interval: Optional[int] = None
 
 class PostBase(BaseModel):
     """

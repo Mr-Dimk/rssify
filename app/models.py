@@ -18,6 +18,7 @@ class Site(Base):
     link_selector = Column(String(256), nullable=True)
     description = Column(Text, nullable=True)
     is_active = Column(Integer, default=1)
+    check_interval = Column(Integer, default=10, nullable=False)  # Интервал проверки в минутах
     # Можно добавить другие поля: created_at, updated_at, etc.
 
     posts = relationship("Post", back_populates="site", cascade="all, delete-orphan")

@@ -167,8 +167,12 @@ def schedule_individual_site_checks(scheduler: TaskScheduler, db_session_factory
         sites = db.query(Site).filter_by(is_active=True).all()
         for site in sites:
             interval = getattr(site, 'check_interval', 10)  # default 10 min
-            def make_job(site_id):
+            def make_job(site_id, interval):
                 def job():
+                    msg = f"[scheduler] Scheduled check for site.id={site_id} (interval={interval} min)"
+                    print(msg)
+                    if logger:
+                        logger.info(msg)
                     db_local = db_session_factory()
                     try:
                         site_obj = db_local.query(Site).get(site_id)
@@ -177,7 +181,7 @@ def schedule_individual_site_checks(scheduler: TaskScheduler, db_session_factory
                         db_local.close()
                 return job
             scheduler.add_job(
-                make_job(site.id),
+                make_job(site.id, interval),
                 'interval',
                 minutes=interval,
                 id=f'check_site_{site.id}',
